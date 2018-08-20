@@ -1,6 +1,7 @@
 from flask import render_template
 from flask import make_response
 from flask import url_for
+from flask import Blueprint
 from jinja2 import Markup
 import re
 import json
@@ -9,6 +10,8 @@ JSGLUE_JS_PATH = '/jsglue.js'
 JSGLUE_NAMESPACE = 'Flask'
 rule_parser = re.compile(r'<(.+?)>')
 splitter = re.compile(r'<.+?>')
+
+bp = Blueprint('jsglue', __name__, template_folder='templates')
 
 
 def get_routes(app):
@@ -33,6 +36,8 @@ class JSGlue(object):
     def init_app(self, app, url_prefix=""):
         self.app = app
         self.url_prefix = url_prefix
+
+        app.register_blueprint(bp)
 
         @app.route(url_prefix + JSGLUE_JS_PATH)
         def serve_js():
