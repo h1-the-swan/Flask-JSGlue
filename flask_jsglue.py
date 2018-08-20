@@ -24,15 +24,17 @@ def get_routes(app):
 
 
 class JSGlue(object):
-    def __init__(self, app=None, **kwargs):
+    def __init__(self, app=None, url_prefix="", **kwargs):
         self.app = app
+        self.url_prefix = url_prefix
         if app is not None:
-            self.init_app(app)
+            self.init_app(app, url_prefix)
 
-    def init_app(self, app):
+    def init_app(self, app, url_prefix=""):
         self.app = app
+        self.url_prefix = url_prefix
 
-        @app.route(JSGLUE_JS_PATH)
+        @app.route(url_prefix + JSGLUE_JS_PATH)
         def serve_js():
             return make_response(
                 (self.generate_js(), 200, {'Content-Type': 'text/javascript'})
